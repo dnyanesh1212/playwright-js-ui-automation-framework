@@ -1,26 +1,11 @@
-// helpers/RuntimeConfig.js
+import { defaultApplication } from '../configs/index.js';
 
 export async function loadRuntimeConfig() {
 
-    // Application is mandatory
-    const applicationName = process.env.APP;
-
-    if (!applicationName) {
-
-        throw new Error(`
-Application name is required.
-
-Example (PowerShell):
-
-$env:APP="automation-exercise"
-npx playwright test
-
-Optional:
-
-$env:ENV="qa"
-`);
-
-    }
+    // Resolve application
+    const applicationName =
+        process.env.APP ??
+        defaultApplication;
 
     let applicationConfig;
     let environmentConfig;
