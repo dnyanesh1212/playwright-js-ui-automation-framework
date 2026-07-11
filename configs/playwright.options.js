@@ -1,4 +1,4 @@
-import { loadRuntimeConfig } from '../helpers/RuntimeConfig.js';
+import { loadRuntimeConfig } from '../core/RuntimeConfig.js';
 
 export async function getPlaywrightOptions() {
 
