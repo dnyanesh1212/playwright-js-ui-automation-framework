@@ -1,26 +1,38 @@
-import { test as base } from "@playwright/test";
+import { test as base, expect } from '@playwright/test'
 
-import Reporter from "../core/Reporter.js";
-import Logger from "../core/Logger.js";
+import Logger   from '../core/Logger.js'
+import Reporter from '../core/Reporter.js'
 
+/**
+ * Framework fixtures.
+ *
+ * Exposes to every test:
+ *   logger   -- writes to console and reports/timestamp/logs/TestName.log
+ *   reporter -- business steps and screenshots for Playwright and Allure
+ *
+ * Does NOT expose page objects.
+ * Page objects belong to the application layer (pages/ folder).
+ */
 export const test = base.extend({
 
-    reporter: async ({}, use) => {
+    logger: async ({}, use, testInfo) => {
 
-        await use(
-            new Reporter()
-        );
+        const logger = new Logger(testInfo.title)
+
+        logger.info(`TEST START: ${testInfo.title}`)
+
+        await use(logger)
+
+        logger.info(`TEST END: ${testInfo.title}`)
 
     },
 
-    logger: async ({}, use) => {
+    reporter: async ({ page, logger }, use) => {
 
-        await use(
-            new Logger()
-        );
+        await use(new Reporter(page, logger))
 
     }
 
-});
+})
 
-export { expect } from "@playwright/test";
+export { expect }

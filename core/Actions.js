@@ -1,280 +1,87 @@
-/**
- * Centralized Playwright UI actions.
- *
- * Responsibilities:
- * - Wrap native Playwright interactions.
- * - Preserve native Playwright behavior.
- * - Provide consistent success logging.
- * - Provide consistent error handling.
- *
- * Non Responsibilities:
- * - Logging framework
- * - Reporting
- * - Screenshots
- * - Assertions
- * - Retry Logic
- * - Business Logic
- */
+import { test } from '@playwright/test'
+
 export default class Actions {
 
-    constructor(page) {
+    constructor(page, logger) {
+        this.page   = page
+        this.logger = logger
+    }
 
-        this.page = page;
+    /**
+     * Core wrapper for all actions.
+     * Logs and executes only -- does NOT create test.step().
+     * Business steps are created by Reporter.step() only.
+     */
+    async perform(actionName, description, action) {
+
+        try {
+            await action()
+            this.logger.info(`${actionName} -- ${description}`)
+        } catch (error) {
+            this.logger.error(`${actionName} FAILED -- ${description} -- ${error.message}`)
+            throw error
+        }
 
     }
 
-/**
- * Executes a Playwright action with consistent success and error handling.
- *
- * @param {string} actionName
- * @param {import('@playwright/test').Locator} locator
- * @param {Function} operation
- * @returns {Promise<any>}
- */
-async performAction(actionName, locator, operation) {
-
-    try {
-
-        const result = await operation();
-
-        console.log(`✓ ${actionName} action completed successfully for Locator: ${locator}`);
-
-        return result;
-
-    } catch (error) {
-
-        throw new Error(
-`Failed to perform '${actionName}' action.
-
-Locator: ${locator}
-
-${error.message}`
-        );
-
+    async click(locator, description = 'element') {
+        await this.perform('Click', description, () => locator.click())
     }
 
-}
-
- // Mouse Actions
-
-click(locator, options) {
-
-    return this.performAction(
-        "Click",
-        locator,
-        () => options ? locator.click(options) : locator.click()
-    );
-
-}
-
-dblClick(locator, options) {
-
-    return this.performAction(
-        "Double Click",
-        locator,
-        () => options ? locator.dblclick(options) : locator.dblclick()
-    );
-
-}
-
-rightClick(locator, options) {
-
-    return this.performAction(
-        "Right Click",
-        locator,
-        () => options
-            ? locator.click({ button: "right", ...options })
-            : locator.click({ button: "right" })
-    );
-
-}
-
-hover(locator, options) {
-
-    return this.performAction(
-        "Hover",
-        locator,
-        () => options ? locator.hover(options) : locator.hover()
-    );
-
-}
-
-// Keyboard / Input Actions
-
-fill(locator, value, options) {
-
-    return this.performAction(
-        "Fill",
-        locator,
-        () => options
-            ? locator.fill(value, options)
-            : locator.fill(value)
-    );
-
-}
-
-clear(locator) {
-
-    return this.performAction(
-        "Clear",
-        locator,
-        () => locator.clear()
-    );
-
-}
-
-press(locator, key, options) {
-
-    return this.performAction(
-        "Press",
-        locator,
-        () => options
-            ? locator.press(key, options)
-            : locator.press(key)
-    );
-
-}
-
-// Selection Actions
-
-check(locator, options) {
-
-    return this.performAction(
-        "Check",
-        locator,
-        () => options ? locator.check(options) : locator.check()
-    );
-
-}
-
-uncheck(locator, options) {
-
-    return this.performAction(
-        "Uncheck",
-        locator,
-        () => options ? locator.uncheck(options) : locator.uncheck()
-    );
-
-}
-
-selectOption(locator, values, options) {
-
-    return this.performAction(
-        "Select Option",
-        locator,
-        () => options
-            ? locator.selectOption(values, options)
-            : locator.selectOption(values)
-    );
-
-}
-
-// File Actions
-
-upload(locator, files, options) {
-
-    return this.performAction(
-        "Upload File",
-        locator,
-        () => options
-            ? locator.setInputFiles(files, options)
-            : locator.setInputFiles(files)
-    );
-
-}
-
-// Information Actions
-
-textContent(locator) {
-
-    return this.performAction(
-        "Get Text",
-        locator,
-        () => locator.textContent()
-    );
-
-}
-
-inputValue(locator) {
-
-    return this.performAction(
-        "Get Value",
-        locator,
-        () => locator.inputValue()
-    );
-
-}
-
-getAttribute(locator, name) {
-
-    return this.performAction(
-        "Get Attribute",
-        locator,
-        () => locator.getAttribute(name)
-    );
-
-}
-
-count(locator) {
-
-    return this.performAction(
-        "Get Count",
-        locator,
-        () => locator.count()
-    );
-
-}
-
-// State Actions
-
-isVisible(locator) {
-
-    return this.performAction(
-        "Is Visible",
-        locator,
-        () => locator.isVisible()
-    );
-
-}
-
-isHidden(locator) {
-
-    return this.performAction(
-        "Is Hidden",
-        locator,
-        () => locator.isHidden()
-    );
-
-}
-
-isEnabled(locator) {
-
-    return this.performAction(
-        "Is Enabled",
-        locator,
-        () => locator.isEnabled()
-    );
-
-}
-
-isDisabled(locator) {
-
-    return this.performAction(
-        "Is Disabled",
-        locator,
-        () => locator.isDisabled()
-    );
-
-}
-
-isChecked(locator) {
-
-    return this.performAction(
-        "Is Checked",
-        locator,
-        () => locator.isChecked()
-    );
-
-}
+    async fill(locator, value, description = 'element') {
+        await this.perform('Fill', description, () => locator.fill(value))
+    }
+
+    async clear(locator, description = 'element') {
+        await this.perform('Clear', description, () => locator.clear())
+    }
+
+    async type(locator, value, description = 'element') {
+        await this.perform('Type', description, () => locator.pressSequentially(value))
+    }
+
+    async press(locator, key, description = 'element') {
+        await this.perform(`Press ${key}`, description, () => locator.press(key))
+    }
+
+    async hover(locator, description = 'element') {
+        await this.perform('Hover', description, () => locator.hover())
+    }
+
+    async check(locator, description = 'element') {
+        await this.perform('Check', description, () => locator.check())
+    }
+
+    async uncheck(locator, description = 'element') {
+        await this.perform('Uncheck', description, () => locator.uncheck())
+    }
+
+    async selectOption(locator, value, description = 'element') {
+        await this.perform('Select', description, () => locator.selectOption(value))
+    }
+
+    async uploadFile(locator, filePath, description = 'element') {
+        await this.perform('Upload', description, () => locator.setInputFiles(filePath))
+    }
+
+    async scrollIntoView(locator, description = 'element') {
+        await this.perform('ScrollIntoView', description, () => locator.scrollIntoViewIfNeeded())
+    }
+
+    async dragTo(source, target, sourceDesc = 'source', targetDesc = 'target') {
+        await this.perform(`Drag ${sourceDesc} to ${targetDesc}`, sourceDesc, () => source.dragTo(target))
+    }
+
+    async dblclick(locator, description = 'element') {
+        await this.perform('DoubleClick', description, () => locator.dblclick())
+    }
+
+    async rightClick(locator, description = 'element') {
+        await this.perform('RightClick', description, () => locator.click({ button: 'right' }))
+    }
+
+    async focus(locator, description = 'element') {
+        await this.perform('Focus', description, () => locator.focus())
+    }
 
 }

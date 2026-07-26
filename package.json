@@ -1,15 +1,25 @@
 {
-  "name": "playwright-js-ui-automation-framework",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.0"
-  }
+    "name": "playwright-js-ui-automation-framework",
+    "version": "1.0.0",
+    "description": "Playwright JavaScript UI Automation Framework",
+    "type": "module",
+    "scripts": {
+        "test":           "playwright test",
+        "test:qa":        "cross-env ENV=qa playwright test",
+        "test:staging":   "cross-env ENV=staging playwright test",
+        "test:headed":    "playwright test --headed",
+        "test:debug":     "playwright test --debug",
+        "test:ui":        "playwright test --ui",
+        "test:chromium":  "playwright test --project=chromium",
+        "test:firefox":   "playwright test --project=firefox",
+        "report:allure":  "allure open reports",
+        "reports:allure":  "node -e \"const fs=require('fs'),path=require('path');const r=path.join('reports');const latest=fs.readdirSync(r).filter(f=>fs.statSync(path.join(r,f)).isDirectory()).sort().at(-1);require('child_process').execSync('npx allure open '+path.join(r,latest,'allure-report'),{stdio:'inherit'})\""
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.61.1",
+        "@types/node":      "^26.1.0",
+        "allure-commandline":"^2.43.0",
+        "allure-playwright": "^3.10.2",
+        "cross-env":         "^7.0.3"
+    }
 }
