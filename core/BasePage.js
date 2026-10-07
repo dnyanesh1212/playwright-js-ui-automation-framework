@@ -25,10 +25,11 @@ export default class BasePage {
      */
     constructor(page, logger) {
 
-        this.page    = page
-        this.actions = new Actions(page, logger)
-        this.assert  = new Assertions(page, logger)
-        this.wait    = new WaitUtils(page, logger)
+        this.page    = page;
+        this.logger = logger;
+        this.actions = new Actions(page, logger);
+        this.assert  = new Assertions(page, logger);
+        this.wait    = new WaitUtils(page, logger);
 
     }
 
