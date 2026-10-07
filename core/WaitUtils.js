@@ -1,13 +1,17 @@
 export default class WaitUtils {
 
     constructor(page, logger) {
-        this.page   = page
-        this.logger = logger
+        this.page   = page;
+        this.logger = logger;
     }
 
     /**
      * Core wrapper for all waits.
      * Logs and executes only -- does NOT create test.step().
+     *
+     * @param {string} waitName
+     * @param {string} description
+     * @param {() => Promise<void>} wait
      */
     async perform(waitName, description, wait) {
 
@@ -21,21 +25,27 @@ export default class WaitUtils {
 
     }
 
-    async waitForVisible(locator, description = 'element', options = {}) {
+    async waitForVisible(locator, options = {}, description = 'element') {
         await this.perform('WaitForVisible', description, () =>
             locator.waitFor({ state: 'visible', ...options })
         )
     }
 
-    async waitForHidden(locator, description = 'element', options = {}) {
+    async waitForHidden(locator, options = {}, description = 'element') {
         await this.perform('WaitForHidden', description, () =>
             locator.waitFor({ state: 'hidden', ...options })
         )
     }
 
-    async waitForAttached(locator, description = 'element', options = {}) {
+    async waitForAttached(locator, options = {}, description = 'element') {
         await this.perform('WaitForAttached', description, () =>
             locator.waitFor({ state: 'attached', ...options })
+        )
+    }
+    
+    async waitForDetached(locator, options = {}, description = 'element') {
+        await this.perform('WaitForDetached', description, () =>
+            locator.waitFor({ state: 'detached', ...options })
         )
     }
 
@@ -66,6 +76,12 @@ export default class WaitUtils {
     async waitForTimeout(ms) {
         await this.perform('WaitForTimeout', `${ms}ms`, () =>
             this.page.waitForTimeout(ms)
+        )
+    }
+
+    async waitForFunction(fn, options = {}) {
+        await this.perform('WaitForFunction', String(fn), () =>
+            this.page.waitForFunction(fn, options)
         )
     }
 
