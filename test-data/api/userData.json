@@ -1,0 +1,40 @@
+{
+    "newUser": {
+        "name":          "Test User",
+        "email":         "testuser_replace@example.com",
+        "password":      "Test@1234",
+        "title":         "Mr",
+        "birth_date":    "15",
+        "birth_month":   "6",
+        "birth_year":    "1990",
+        "firstname":     "Test",
+        "lastname":      "User",
+        "company":       "Test Company",
+        "address1":      "123 Test Street",
+        "address2":      "Apt 4B",
+        "country":       "India",
+        "zipcode":       "411001",
+        "state":         "Maharashtra",
+        "city":          "Pune",
+        "mobile_number": "9999999999"
+    },
+    "updatedUser": {
+        "name":          "Updated User",
+        "email":         "testuser_replace@example.com",
+        "password":      "Test@1234",
+        "title":         "Mrs",
+        "birth_date":    "20",
+        "birth_month":   "8",
+        "birth_year":    "1992",
+        "firstname":     "Updated",
+        "lastname":      "User",
+        "company":       "Updated Company",
+        "address1":      "456 Updated Street",
+        "address2":      "Suite 10",
+        "country":       "India",
+        "zipcode":       "411002",
+        "state":         "Maharashtra",
+        "city":          "Mumbai",
+        "mobile_number": "8888888888"
+    }
+}
