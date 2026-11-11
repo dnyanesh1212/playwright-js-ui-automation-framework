@@ -37,9 +37,9 @@ export default class LoginPage extends BasePage {
 
     async verifyLoginPageLoaded() {
 
-        await this.assert.toBeVisible(this.emailTextbox, { timeout: 30000 });
-        await this.assert.toBeVisible(this.passwordTextbox, { timeout: 30000 });
-        await this.assert.toBeVisible(this.loginButton, { timeout: 30000 });
+        await this.assert.toBeVisible(this.emailTextbox);
+        await this.assert.toBeVisible(this.passwordTextbox);
+        await this.assert.toBeVisible(this.loginButton);
 
     }
 
